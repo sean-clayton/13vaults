@@ -13,15 +13,10 @@ export default function EncounterTable({
   battleCount: battlecount,
 }: EncounterTableP) {
   const meqBudget = [0, 1, 2, 3, 5, 7, 9, 11][playerCount];
-  const mookFactor = [0, 3, 3, 4, 4, 5, 5, 5, 5, 5, 5][level];
-  let eliteMookFactor: number | string = mookFactor * 1.5;
-  if (eliteMookFactor !== toInteger(eliteMookFactor)) {
-    const low = Math.floor(eliteMookFactor);
-    const high = Math.ceil(eliteMookFactor);
-    eliteMookFactor = `${low}-${high}`;
-  }
-  const parLevelBase = level < 5 ? level : level < 8 ? level + 1 : level + 2;
-  const parLevel = battlecount === 4 ? parLevelBase : parLevelBase + 1;
+  let battleLevel = level
+  if (level >= 5) battleLevel++
+  if (level >= 8) battleLevel++
+  if (battlecount === 3) battleLevel++
 
   const { t } = useTranslation("calculator");
 
@@ -47,22 +42,22 @@ export default function EncounterTable({
           <thead>
             <tr>
               <th>{t("monsterlevel")}</th>
-              <th>{t("standard", { mooks: mookFactor })}</th>
-              <th>{t("elite", { mooks: eliteMookFactor })}</th>
-              <th>{t("large", { mooks: mookFactor * 2 })}</th>
-              <th>{t("huge", { mooks: mookFactor * 3 })}</th>
+              <th>{t("standard", { mooks: 5 })}</th>
+              <th>{t("elite", { mooks: '7-8' })}</th>
+              <th>{t("large", { mooks: 10 })}</th>
+              <th>{t("huge", { mooks: 15 })}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>{parLevel - 2}</td>
+              <td>{battleLevel - 2}</td>
               <td>0.5</td>
               <td>0.7</td>
               <td>1</td>
               <td>1.5</td>
             </tr>
             <tr>
-              <td>{parLevel - 1}</td>
+              <td>{battleLevel - 1}</td>
               <td>0.7</td>
               <td>1</td>
               <td>1.5</td>
@@ -70,7 +65,7 @@ export default function EncounterTable({
             </tr>
             <tr>
               <td>
-                <strong>{parLevel}</strong>
+                <strong>{battleLevel}</strong>
               </td>
               <td>
                 <strong>1</strong>
@@ -86,14 +81,14 @@ export default function EncounterTable({
               </td>
             </tr>
             <tr>
-              <td>{parLevel + 1}</td>
+              <td>{battleLevel + 1}</td>
               <td>1.5</td>
               <td>2*</td>
               <td>3*</td>
               <td>4*</td>
             </tr>
             <tr>
-              <td>{parLevel + 2}</td>
+              <td>{battleLevel + 2}</td>
               <td>2*</td>
               <td>3**</td>
               <td>4**</td>
